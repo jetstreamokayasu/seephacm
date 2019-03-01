@@ -158,10 +158,10 @@ aggr_success_rates<-function(aggrlist, correct){
 
     set.sum<-length(aggr[[1]])
 
-    cycle1<-cycle_number(aggr[[1]], compare=F)
+    cycle1<-cycle_number(aggr, 1)
     rate1<-cycle1[correct[1]+1]/set.sum
 
-    cycle2<-cycle_number(aggr[[2]], compare=F)
+    cycle2<-cycle_number(aggr, 2)
     rate2<-cycle2[correct[2]+1]/set.sum
 
     return(list(dim1rate=rate1, dim2rate=rate2))
