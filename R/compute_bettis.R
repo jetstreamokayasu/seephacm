@@ -7,14 +7,14 @@
 #' @param const.size the number of points in one subsamples
 #'   when 'const.size=F', the number of points in one subsamples is the 80% number of points in original data
 #' @export
-#' @return list that have 1st and 2nd Betti numbers, the number of data, the number of points in one subsamples
+#' @return aggrs list that have 1st and 2nd Betti numbers, the number of data, the number of points in one subsamples
 #'   the number of subsamples, max dimension, and max scale
 
 calc_bettis <- function(X, maxdim, maxscale, samples, const.size=F){
   aggr1 <- matrix(0,length(X),1)
   aggr2 <- matrix(0,length(X),1)
   rownames(aggr1) <- paste0("data-set", 1:length(X))
-  dimnames(aggr2) <- rownames(aggr1)
+  rownames(aggr2) <- rownames(aggr1)
   
   for(t in 1:length(X)){
     
@@ -24,17 +24,16 @@ calc_bettis <- function(X, maxdim, maxscale, samples, const.size=F){
     
     B <- bootstrapper(X[[t]], size, samples)
     speak <- bootstrap_homology(B,maxdim,maxscale)
-    m <- sapply(1:maxdim,function(d)speak[[paste0("dim",d,"dhole")]])
     
-    aggr1[t,1] <- m[1]
-    aggr2[t,1] <- m[2]
+    aggr1[t,1] <- mean(speak[1,])
+    aggr2[t,1] <- mean(speak[2,])
   }
   
   aggrs <- list(aggr1,aggr2)
  
-  aggrs <- append(aggrs,list(Xsize=sapply(1:length(X), function(l)nrow(X[[l]]),Xsamples=length(X),
+  aggrs <- append(aggrs,list(Xsize=sapply(1:length(X), function(l)nrow(X[[l]])), Xsamples=length(X),
                              Bsize=size,Bsamples=samples,
-                             maxdim=maxdim,maxscale=maxscale))
+                             maxdim=maxdim, maxscale=maxscale))
   class(aggrs) <- "bettiComp"
   
   return(aggrs)
@@ -56,30 +55,42 @@ bootstrapper <- function(X,size,samples){
 }
 
 
-#'Computing cycles in subsamples
-#'
+#' Computing cycles in subsamples
+#' @importFrom phacm compute_pd
+#' @importFrom phacm compute_pl
+#' @importFrom phacm count_smooth_maximal
+#' @importFrom magrittr %>% 
 
 bootstrap_homology <- function(X,maxdim,maxscale,const.band=0,maximum.thresh = F){
 
   if(!("bootsSamples" %in% class(X))) stop("input must be bootsSamples")
   peak <- matrix(0,maxdim,length(X))
-  tseq <- seq(0,maxscale,length.out = 1000)
-  diags <- lapply(X,function(x)calcPhom(x,maxdim,maxscale,ret = T,plot = F))
-  print(sapply(diags,function(diag)calcDiagCentroid.mk2(diag)[1]))
-  band <- ifelse(const.band==0,max(sapply(diags,function(diag)calcDiagCentroid.mk2(diag)[1])),const.band)
-  print(band)
+
+  diags <- lapply(X,function(x)phacm::compute_pd(x,maxdim,maxscale))
   
   for (t in 1:length(X)) {
-    land <- lapply(1:maxdim,function(d)landscape(diags[[t]][[1]],dimension = d,KK = 1,tseq = tseq))
+    pd<-diags[[t]]
+    attr(pd, "maxdimension")<-maxdim
+    attr(pd, "scale")<-c(0, maxscale)
+    land <- phacm::compute_pl(pd)
     if(maximum.thresh) band <- max(sapply(land,max))/4
-    for(d in 1:maxdim){
-      peak[d,t] <- calc.landscape.peak(X=land[[d]], thresh = (band/d), tseq=tseq)
-    }
+    peak[, t]<- phacm::count_smooth_maximal(land, exist.method = per_mean, cutoff.method = per_mean)[, "betti"] %>% 
+      as.matrix()
   }
   
   dimnames(peak) <- list(paste0("dim",1:maxdim),paste0("sample",1:length(X)))
-  bootstrap.summary <- list(peak=peak)
-  bootstrap.summary <- append(bootstrap.summary,c(band=band,show.hole.density(peak)))
-  class(bootstrap.summary) <- "smoothPhom"
-  return(bootstrap.summary)
+
+  return(peak)
+}
+
+
+#' Calculating threshold using the mean of persistence
+#' @importFrom phacm zero_hat_double_threshold
+
+per_mean<-function(pd){
+  
+  mean<-phacm::zero_hat_double_threshold(pd)
+  
+  return(mean/2)
+  
 }
