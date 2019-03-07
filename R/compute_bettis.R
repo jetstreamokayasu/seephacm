@@ -60,6 +60,11 @@ bootstrapper <- function(X,size,samples){
 #' @importFrom phacm compute_pl
 #' @importFrom phacm count_smooth_maximal
 #' @importFrom magrittr %>%
+#' @param X subsamples
+#' @param maxdim the max dimension to compute persistent homology
+#' @param maxscale the maximum of range to compute
+#' @param const.band constant band to discriminate cycles and noises
+#' @param maximum.thresh use a quarter of max persistence as threshold
 
 bootstrap_homology <- function(X,maxdim,maxscale,const.band=0,maximum.thresh = F){
 
@@ -154,7 +159,7 @@ meetNumber<-function(result, correct){
 
 aggr_success_rates<-function(aggrlist, correct){
 
-  rates<-lapply(aggr.list, function(aggr){
+  rates<-lapply(aggrlist, function(aggr){
 
     set.sum<-length(aggr[[1]])
 
@@ -176,7 +181,9 @@ aggr_success_rates<-function(aggrlist, correct){
 #' Calculating persistence landscape from persistence diagram by 'TDA' and ploting
 #' @param diag persistence diagram
 #' @param maxscale the maximum of range to compute
+#' @param line draw threshold in a graph
 #' @importFrom TDA landscape
+#' @importFrom graphics plot
 #' @export
 
 calc_landscape<-function(diag, maxscale, line=T){
@@ -184,16 +191,16 @@ calc_landscape<-function(diag, maxscale, line=T){
   thresh<-phacm::calcDiagCentroid(diag)[3]
   tseq <- seq(0, maxscale, length = 1000)
   Land.dim1 <- TDA::landscape(diag[[1]], dimension = 1, KK = 1, tseq)
-  plot(tseq, Land.dim1, type = "l", col=2, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(Land.dim1)+1)/2), main ="1-degree landscape")
+  graphics::plot(tseq, Land.dim1, type = "l", col=2, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(Land.dim1)+1)/2), main ="1-degree landscape")
   if(line){
-    abline(h=thresh)
+    graphics::abline(h=thresh)
   }
 
   if(length(diag[[1]][diag[[1]][,1]==2,])>0){
     Land.dim2 <- TDA::landscape(diag[[1]], dimension = 2, KK = 1, tseq)
-    plot(tseq, Land.dim2, type = "l", col=3, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(Land.dim2)+1)/2), main ="2-degree landscape")
+    graphics::plot(tseq, Land.dim2, type = "l", col=3, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(Land.dim2)+1)/2), main ="2-degree landscape")
     if(line){
-      abline(h=thresh/2)
+      graphics::abline(h=thresh/2)
     }
 
     return(list(tseq=tseq, Land.dim1=Land.dim1, Land.dim2=Land.dim2, thresh=thresh))
@@ -212,19 +219,19 @@ plotLandscape<-function(land){
 
     if(names(land)[k]=="Land.dim1"){
 
-      plot(land[[1]], land[[k]], type = "l", col=k, xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(k-1, "-degree landscape"))
-      abline(h=land[["thresh"]])
+      graphics::plot(land[[1]], land[[k]], type = "l", col=k, xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(k-1, "-degree landscape"))
+      graphics::abline(h=land[["thresh"]])
 
     }
 
     else if(names(land)[k]=="Land.dim2"){
 
-      plot(land[[1]], land[[k]], type = "l", col=3, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(2, "-degree landscape"))
-      abline(h=land[["thresh"]]/2)
+      graphics::plot(land[[1]], land[[k]], type = "l", col=3, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(2, "-degree landscape"))
+      graphics::abline(h=land[["thresh"]]/2)
 
     }else{
 
-      plot(land[[1]], land[[k]], type = "l", col=k, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(k-1, "-degree landscape"))
+      graphics::plot(land[[1]], land[[k]], type = "l", col=k, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(k-1, "-degree landscape"))
 
     }
 

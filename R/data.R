@@ -1,10 +1,12 @@
 #' Generating points distributing on disk uniformly
 #' @param N the number of points
 #' @param R radius
+#' @importFrom stats runif
+#' @export
 
 uniDisMake<-function(N, R){
 
-  theta <- runif(N, min=0, max=2*pi)
+  theta <- stats::runif(N, min=0, max=2*pi)
   r <- sqrt(2*runif(N, min=0, max=0.5*R^2))
   df <- data.frame(x=r*cos(theta), y=r*sin(theta))
   return(df)
@@ -16,6 +18,7 @@ uniDisMake<-function(N, R){
 #' @param X 3d data
 #' @importFrom rgl plot3d
 #' @importFrom rgl aspect3d
+#' @export
 
 figurePlot3d<-function(X){
 
@@ -27,6 +30,7 @@ figurePlot3d<-function(X){
 #' Saving variable into RData file
 #' @param ... one variable
 #' @importFrom magrittr %>%
+#' @export
 
 save2Rdata <- function(...) {
 
