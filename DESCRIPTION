@@ -1,7 +1,7 @@
 Package: seephacm
-Title: What the Package Does (one line, title case)
-Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Title: Summarize results of R Package "phacm"
+Version: 0.0.1.0000
+Authors@R: person("Noritaka", "Yamada", email = "okayasu@fz.iit.tsukuba.ac.jp", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 Depends: R (>= 3.5.1)
 License: MIT + file LICENSE
@@ -11,5 +11,7 @@ Imports:
     phacm,
     TDA,
     magrittr,
-    rgl
+    rgl,
+    stats,
+    graphics
 RoxygenNote: 6.1.1

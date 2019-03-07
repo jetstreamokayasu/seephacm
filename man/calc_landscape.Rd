@@ -10,6 +10,8 @@ calc_landscape(diag, maxscale, line = T)
 \item{diag}{persistence diagram}
 
 \item{maxscale}{the maximum of range to compute}
+
+\item{line}{draw threshold in a graph}
 }
 \description{
 Calculating persistence landscape from persistence diagram by 'TDA' and ploting

@@ -91,6 +91,8 @@ bootstrap_homology <- function(X,maxdim,maxscale,const.band=0,maximum.thresh = F
 
 #' Calculating threshold using the mean of persistence
 #' @importFrom phacm zero_hat_double_threshold
+#' @param pd persisitence diagram by 'phacm'
+#' @export
 
 per_mean<-function(pd){
 

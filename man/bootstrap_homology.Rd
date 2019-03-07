@@ -7,6 +7,17 @@
 bootstrap_homology(X, maxdim, maxscale, const.band = 0,
   maximum.thresh = F)
 }
+\arguments{
+\item{X}{subsamples}
+
+\item{maxdim}{the max dimension to compute persistent homology}
+
+\item{maxscale}{the maximum of range to compute}
+
+\item{const.band}{constant band to discriminate cycles and noises}
+
+\item{maximum.thresh}{use a quarter of max persistence as threshold}
+}
 \description{
 Computing cycles in subsamples
 }

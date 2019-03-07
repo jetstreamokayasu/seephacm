@@ -6,6 +6,9 @@
 \usage{
 per_mean(pd)
 }
+\arguments{
+\item{pd}{persisitence diagram by 'phacm'}
+}
 \description{
 Calculating threshold using the mean of persistence
 }
