@@ -6,6 +6,13 @@
 \usage{
 bootstrapper(X, size, samples)
 }
+\arguments{
+\item{X}{origin data}
+
+\item{size}{the number of data points in one subsample}
+
+\item{samples}{the number of subsamples}
+}
 \value{
 "bootsSamples" class
 }

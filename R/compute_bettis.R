@@ -41,6 +41,9 @@ calc_bettis <- function(X, maxdim, maxscale, samples, const.size=F){
 
 #' Making subsamples
 #' @importFrom TDA hausdInterval
+#' @param X origin data
+#' @param size the number of data points in one subsample
+#' @param samples the number of subsamples
 #' @return "bootsSamples" class
 
 bootstrapper <- function(X,size,samples){
