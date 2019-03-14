@@ -4,7 +4,7 @@
 #' @importFrom stats runif
 #' @export
 
-uniDisMake<-function(N, R){
+uniDiskMake<-function(N, R){
 
   theta <- stats::runif(N, min=0, max=2*pi)
   r <- sqrt(2*runif(N, min=0, max=0.5*R^2))
