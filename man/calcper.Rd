@@ -4,12 +4,12 @@
 \alias{calcper}
 \title{Calculating persistence of n-dimensional holes}
 \usage{
-calcper(pd, n)
+calcper(pd, dim)
 }
 \arguments{
 \item{pd}{persisitence diagram by 'phacm'}
 
-\item{n}{dimension}
+\item{dim}{dimension}
 }
 \description{
 Calculating persistence of n-dimensional holes

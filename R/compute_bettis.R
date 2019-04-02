@@ -108,15 +108,14 @@ per_mean<-function(pd){
 
 #' Calculating persistence of n-dimensional holes
 #' @param pd persisitence diagram by 'phacm'
-#' @param n dimension
-#' @importFrom phacm persistence
+#' @param dim dimension
 #' @export
-calcper<-function(pd, n){
+calcper<-function(pd, dim){
 
-  per<-phacm::persistence(pd)
-  per.dim<-per[per[,"dim"]==n, "persistence"] %>% as.vector()
+  per.dim<-pd[pd[,1]==dim, 3]-pd[diag[,1]==dim, 2]
+  if(dim==0){per.dim<-per.dim[-1]}
 
-  if(n==0){per.dim<-per.dim[-1, ]}
+  attr(per.dim, "dim")<-dim
 
   return(per.dim)
 }
