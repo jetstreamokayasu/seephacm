@@ -2,7 +2,7 @@
 % Please edit documentation in R/compute_bettis.R
 \name{calc_diag_centroid}
 \alias{calc_diag_centroid}
-\title{Calculating mean of persistence}
+\title{Calculating the mean of persistence}
 \usage{
 calc_diag_centroid(diag = diagram)
 }
@@ -10,8 +10,8 @@ calc_diag_centroid(diag = diagram)
 \item{diag}{a persistence diagram}
 }
 \value{
-mean of persistence and double mean of persistence
+the mean of persistence and the double mean of persistence
 }
 \description{
-Calculating mean of persistence
+Calculating the mean of persistence
 }

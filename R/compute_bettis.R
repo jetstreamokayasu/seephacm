@@ -243,9 +243,9 @@ plotLandscape<-function(land){
 
 }
 
-#'Calculating mean of persistence
+#'Calculating the mean of persistence
 #'@param diag a persistence diagram
-#'@return mean of persistence and double mean of persistence
+#'@return the mean of persistence and the double mean of persistence
 #'
 calc_diag_centroid <- function(diag = diagram){
   if(class(diag)=="list") diag <- diag[[1]]
