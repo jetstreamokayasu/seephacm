@@ -192,7 +192,7 @@ aggr_success_rates<-function(aggrlist, correct){
 
 calc_landscape<-function(diag, maxscale, line=T){
 
-  thresh<-phacm::calcDiagCentroid(diag)[3]
+  thresh<-calc_diag_centroid(diag)[1]
   tseq <- seq(0, maxscale, length = 1000)
   Land.dim1 <- TDA::landscape(diag[[1]], dimension = 1, KK = 1, tseq)
   graphics::plot(tseq, Land.dim1, type = "l", col=2, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(Land.dim1)+1)/2), main ="1-degree landscape")
@@ -241,5 +241,20 @@ plotLandscape<-function(land){
 
   })
 
+}
+
+#'Calculating mean of persistence
+#'@param diag a persistence diagram
+#'@return mean of persistence and double mean of persistence
+#'
+calc_diag_centroid <- function(diag = diagram){
+  if(class(diag)=="list") diag <- diag[[1]]
+  diag <- diag[-which(diag[,1]==0),]
+  centroid1 <- diag[diag[,1]==1,3]-diag[diag[,1]==1,2]
+  centroid2 <- (diag[diag[,1]==2,3]-diag[diag[,1]==2,2])*2
+  cpersistence <- mean(c(centroid1, centroid2))
+  ret <- c(cpersistence,noizes_thresh=cpersistence*2)
+  names(ret) <- c("cpersistence","noizes_thresh")
+  return(ret)
 }
 
