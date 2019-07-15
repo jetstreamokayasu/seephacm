@@ -4,7 +4,7 @@
 \alias{calc_diag_centroid}
 \title{Calculating the mean of persistence}
 \usage{
-calc_diag_centroid(diag = diagram)
+calc_diag_centroid(diag)
 }
 \arguments{
 \item{diag}{a persistence diagram}

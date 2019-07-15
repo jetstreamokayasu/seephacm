@@ -5,7 +5,7 @@
 #' @param maxscale the maximum of range to compute
 #' @param samples the number of subsamples
 #' @param const.size the number of points in one subsamples.
-#'   when 'const.size=F', the number of points in one subsamples is the 80% number of points in original data
+#'   when 'const.size=F', the number of points in one subsamples is the 80\% number of points in original data
 #' @export
 #' @return return list that have 1st and 2nd Betti numbers, the number of data, the number of points in one subsamples
 #'   the number of subsamples, max dimension, and max scale
@@ -19,10 +19,10 @@ calc_bettis <- function(X, maxdim, maxscale, samples, const.size=F){
   for(t in 1:length(X)){
 
     cat("data set", t, "calculating\n")
-    if(const.size==F){size<-nrow(X[[t]])*(4/5)}
+    if(const.size==F){size<-nrow(X[[t]][[2]])*(4/5)}
     else{size<-const.size}
 
-    B <- bootstrapper(X[[t]], size, samples)
+    B <- bootstrapper(X[[t]][[2]], size, samples)
     speak <- bootstrap_homology(B,maxdim,maxscale)
 
     aggr1[t,1] <- mean(speak[1,])
@@ -48,7 +48,7 @@ calc_bettis <- function(X, maxdim, maxscale, samples, const.size=F){
 
 bootstrapper <- function(X,size,samples){
 
-  hausdint <- TDA::hausdInterval(X = X,m = size,B = samples)
+  hausdint <- TDA::hausdInterval(X = X, m = size, B = samples)
   X <- lapply(1:samples,function(i)X[sample(nrow(X),size),])
   attr(X,"size") <- size
   attr(X,"samples") <- samples
@@ -247,7 +247,7 @@ plotLandscape<-function(land){
 #'@param diag a persistence diagram
 #'@return the mean of persistence and the double mean of persistence
 #'
-calc_diag_centroid <- function(diag = diagram){
+calc_diag_centroid <- function(diag){
   if(class(diag)=="list") diag <- diag[[1]]
   diag <- diag[-which(diag[,1]==0),]
   centroid1 <- diag[diag[,1]==1,3]-diag[diag[,1]==1,2]

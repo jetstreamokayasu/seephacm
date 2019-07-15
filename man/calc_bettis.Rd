@@ -16,7 +16,7 @@ calc_bettis(X, maxdim, maxscale, samples, const.size = F)
 \item{samples}{the number of subsamples}
 
 \item{const.size}{the number of points in one subsamples.
-when 'const.size=F', the number of points in one subsamples is the 80% number of points in original data}
+when 'const.size=F', the number of points in one subsamples is the 80\% number of points in original data}
 }
 \value{
 return list that have 1st and 2nd Betti numbers, the number of data, the number of points in one subsamples

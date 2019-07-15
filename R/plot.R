@@ -16,6 +16,7 @@ plot_diagrams<-function(diags){
 #'Plotting persistence landscape in a list
 #'
 #'@param lands list of persistence landscape
+#'@param dim dimension to plot
 #'@importFrom graphics par
 #'
 plot_lands<-function(lands, dim){

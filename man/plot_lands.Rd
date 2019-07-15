@@ -8,6 +8,8 @@ plot_lands(lands, dim)
 }
 \arguments{
 \item{lands}{list of persistence landscape}
+
+\item{dim}{dimension to plot}
 }
 \description{
 Plotting persistence landscape in a list
