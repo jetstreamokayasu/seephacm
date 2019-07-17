@@ -160,6 +160,8 @@ meetNumber<-function(result, correct){
 #' Calculating succsess rate of results
 #' @param aggrlist list of estimate result of 'calc_bettis'
 #' @param correct vector of correct Betti numbers
+#' @export
+#'
 
 aggr_success_rates<-function(aggrlist, correct){
 
