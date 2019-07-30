@@ -3,6 +3,8 @@
 #'@param diags list of persisitence diagram
 #'@importFrom graphics plot
 #'@importFrom graphics par
+#'@export
+#'
 plot_diagrams<-function(diags){
 
   graphics::par(mfrow=c(((length(diags)%/%4)+1), 4))
@@ -18,6 +20,7 @@ plot_diagrams<-function(diags){
 #'@param lands list of persistence landscape
 #'@param dim dimension to plot
 #'@importFrom graphics par
+#'@export
 #'
 plot_lands<-function(lands, dim){
 
@@ -31,5 +34,38 @@ for (k in 1:length(lands)) {
 }
 
 graphics::par(oldpar)
+
+}
+
+#'Plotting persistence landscape
+#'
+#'@param land persistence landscape
+#'@importFrom graphics plot
+#'@importFrom graphics abline
+#'@export
+#'
+plot_landscape<-function(land){
+
+  plotland<-lapply(2:(length(land)-1), function(k){
+
+    if(names(land)[k]=="Land.dim1"){
+
+      graphics::plot(land[[1]], land[[k]], type = "l", col=k, xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(k-1, "-degree landscape"))
+      graphics::abline(h=land[["thresh"]])
+
+    }
+
+    else if(names(land)[k]=="Land.dim2"){
+
+      graphics::plot(land[[1]], land[[k]], type = "l", col=3, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(2, "-degree landscape"))
+      graphics::abline(h=land[["thresh"]]/2)
+
+    }else{
+
+      graphics::plot(land[[1]], land[[k]], type = "l", col=k, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(k-1, "-degree landscape"))
+
+    }
+
+  })
 
 }
