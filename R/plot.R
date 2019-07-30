@@ -30,7 +30,7 @@ graphics::par(cex.lab=2, cex.main=2, cex.axis=2, plt = c(0.2, 0.9, 0.2, 0.9))
 graphics::par(mfrow=c(2, (length(lands)%/%2+length(lands)%%2)))
 
 for (k in 1:length(lands)) {
-  plotLandscape(lands[[k]][dim-4])
+  plot_landscape(lands[[k]][dim-4])
 }
 
 graphics::par(oldpar)
