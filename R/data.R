@@ -27,15 +27,25 @@ figurePlot3d<-function(X){
 
 }
 
-#' Saving variable into RData file
+#' Saving variable into RData file in "data" directory under working directory.
+#' When there isn't "data" directory in working directory, this function make "data" directory.
 #' @param ... one variable
 #' @importFrom magrittr %>%
 #' @export
 
-save2Rdata <- function(...) {
+save2RData <- function(...) {
 
   elp <- list(...)
   elname <- substitute(...) %>% as.character()
   assign(elname, elp[[1]])
-  save(list = elname, file = paste0("./data/", gsub("\\.", "_", elname), ".RData"))
+
+  dir<-match("data", list.files())
+  if(is.na(dir)){
+    dir.create("./data")
+  }else{
+    if(!(file.info("./data")$isdir)){dir.create("./data")}
+  }
+
+  save(list = elname, file = paste0("./data/", elname, ".RData"))
+
 }
