@@ -112,7 +112,7 @@ per_mean<-function(pd){
 #' @export
 calcper<-function(pd, dim){
 
-  per.dim<-pd[pd[,1]==dim, 3]-pd[diag[,1]==dim, 2]
+  per.dim<-pd[pd[,1]==dim, 3]-pd[pd[,1]==dim, 2]
   if(dim==0){per.dim<-per.dim[-1]}
 
   attr(per.dim, "dim")<-dim
