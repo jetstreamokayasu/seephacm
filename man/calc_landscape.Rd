@@ -4,14 +4,19 @@
 \alias{calc_landscape}
 \title{Calculating persistence landscape from persistence diagram by 'TDA' and ploting}
 \usage{
-calc_landscape(diag, maxscale, line = T)
+calc_landscape(diag, maxscale, plot = T, line = T)
 }
 \arguments{
 \item{diag}{persistence diagram}
 
 \item{maxscale}{the maximum of range to compute}
 
-\item{line}{draw threshold in a graph}
+\item{plot}{default TRUE; if TRUE, plot persistence landscape}
+
+\item{line}{default TRUE; if TRUE, draw threshold in a graph}
+}
+\value{
+persistence diagram
 }
 \description{
 Calculating persistence landscape from persistence diagram by 'TDA' and ploting

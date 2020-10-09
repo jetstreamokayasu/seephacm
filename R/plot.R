@@ -39,33 +39,44 @@ graphics::par(oldpar)
 
 #'Plotting persistence landscape
 #'
-#'@param land persistence landscape
+#'@param land persistence landscape calculated by 'calc_landscape'
+#'@param dim dimension of persistence landscape to plot
+#'@param xlim the x limits (x1, x2) of the plot of persistence landscape
+#'@param ylim the y limits of the plot of persistence landscape
 #'@importFrom graphics plot
 #'@importFrom graphics abline
 #'@export
 #'
-plot_landscape<-function(land){
 
-  plotland<-lapply(2:(length(land)-1), function(k){
+plot_landscape<-function(land, dim, xlim, ylim){
 
-    if(names(land)[k]=="Land.dim1"){
+  if(missing(xlim)){xlim<-c(0, attr(land[[paste0(dim, "-land")]], "maxscale"))}
+  if(missing(ylim)){ylim<-c(0, round(max(land[[paste0(dim, "-land")]])+0.5))}
 
-      graphics::plot(land[[1]], land[[k]], type = "l", col=k, xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(k-1, "-degree landscape"))
-      graphics::abline(h=land[["thresh"]])
+  graphics::plot(land[["tseq"]], land[[paste0(dim, "-land")]], type = "l", col=dim+1, xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2", xlim=xlim, ylim=ylim, main = paste0(dim, "-degree landscape"))
+  graphics::abline(h=land[["thresh"]]*((2*pi)/surface_nshpere(dim)))
 
-    }
-
-    else if(names(land)[k]=="Land.dim2"){
-
-      graphics::plot(land[[1]], land[[k]], type = "l", col=3, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(2, "-degree landscape"))
-      graphics::abline(h=land[["thresh"]]/2)
-
-    }else{
-
-      graphics::plot(land[[1]], land[[k]], type = "l", col=k, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(k-1, "-degree landscape"))
-
-    }
-
-  })
 
 }
+
+#'Draw cicle in a figure with 'polygon'.
+#'@param x x-coordinate of the center of a circle.
+#'@param y y-coordinate of the center of a circle.
+#'@param r the radius of a circle.
+#'@param col color.
+#'@importFrom graphics polygon
+#'@importFrom grDevices rgb
+#'@export
+#'
+
+plot_circle<-function(x, y, r, col){
+
+  if(missing(col)){col=grDevices::rgb(1, 1, 1, 0)}
+
+  theta <- seq(-pi, pi, length=100)
+  graphics::polygon(x + r*cos(theta), y + r*sin(theta), col=col)
+
+
+}
+
+

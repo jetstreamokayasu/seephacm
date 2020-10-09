@@ -4,10 +4,16 @@
 \alias{plot_landscape}
 \title{Plotting persistence landscape}
 \usage{
-plot_landscape(land)
+plot_landscape(land, dim, xlim, ylim)
 }
 \arguments{
-\item{land}{persistence landscape}
+\item{land}{persistence landscape calculated by 'calc_landscape'}
+
+\item{dim}{dimension of persistence landscape to plot}
+
+\item{xlim}{the x limits (x1, x2) of the plot of persistence landscape}
+
+\item{ylim}{the y limits of the plot of persistence landscape}
 }
 \description{
 Plotting persistence landscape

@@ -1,6 +1,6 @@
 Package: seephacm
 Title: Summarize results of R Package "phacm"
-Version: 0.0.1.0000
+Version: 0.1.1.0000
 Authors@R: person("Noritaka", "Yamada", email = "okayasu@fz.iit.tsukuba.ac.jp", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 Depends: R (>= 3.5.0)
@@ -13,5 +13,6 @@ Imports:
     magrittr,
     rgl,
     stats,
-    graphics
-RoxygenNote: 6.1.1
+    graphics,
+    grDevices
+RoxygenNote: 7.1.0

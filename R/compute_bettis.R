@@ -187,76 +187,103 @@ aggr_success_rates<-function(aggrlist, correct){
 #' Calculating persistence landscape from persistence diagram by 'TDA' and ploting
 #' @param diag persistence diagram
 #' @param maxscale the maximum of range to compute
-#' @param line draw threshold in a graph
+#' @param plot default TRUE; if TRUE, plot persistence landscape
+#' @param line default TRUE; if TRUE, draw threshold in a graph
 #' @importFrom TDA landscape
 #' @importFrom graphics plot
 #' @export
+#' @return persistence diagram
 
-calc_landscape<-function(diag, maxscale, line=T){
+calc_landscape<-function(diag, maxscale, plot=T, line=T){
 
-  thresh<-calc_diag_centroid(diag)[1]
-  tseq <- seq(0, maxscale, length = 1000)
-  Land.dim1 <- TDA::landscape(diag[[1]], dimension = 1, KK = 1, tseq)
-  graphics::plot(tseq, Land.dim1, type = "l", col=2, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(Land.dim1)+1)/2), main ="1-degree landscape")
-  if(line){
-    graphics::abline(h=thresh)
-  }
+  if(class(diag)=="list"){diag<-diag[["diagram"]]}
 
-  if(length(diag[[1]][diag[[1]][,1]==2,])>0){
-    Land.dim2 <- TDA::landscape(diag[[1]], dimension = 2, KK = 1, tseq)
-    graphics::plot(tseq, Land.dim2, type = "l", col=3, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(Land.dim2)+1)/2), main ="2-degree landscape")
-    if(line){
-      graphics::abline(h=thresh/2)
-    }
+  thresh<-persistence_weighted_mean(diag)
+  tseq <- seq(0, maxscale, length = 1000) #domain
+  maxdim<-max(diag[,1])
+  if(missing(maxscale)){maxscale<-max(diag[,3])}
 
-    return(list(tseq=tseq, Land.dim1=Land.dim1, Land.dim2=Land.dim2, thresh=thresh))
+  lands<-lapply(1:maxdim, function(k){
 
-  }else{return(list(tseq=tseq, Land.dim1=Land.dim1, thresh=thresh))}
-}
+    land<-landscape(diag, dimension = k, KK = 1, tseq)
 
+    if(plot){
 
-#' Plotingpersistence  landscape
-#' @param land persistence landscape calculated by 'calc_landscape'
-#' @export
-
-plotLandscape<-function(land){
-
-  plotland<-lapply(2:(length(land)-1), function(k){
-
-    if(names(land)[k]=="Land.dim1"){
-
-      graphics::plot(land[[1]], land[[k]], type = "l", col=k, xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(k-1, "-degree landscape"))
-      graphics::abline(h=land[["thresh"]])
+      plot(tseq, land, type = "l", col=k+1, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land)+0.5)), main = paste0(k, "-degree landscape"))
+      if(line){abline(h=thresh*((2*pi)/surface_nshpere(k)))}
 
     }
 
-    else if(names(land)[k]=="Land.dim2"){
-
-      graphics::plot(land[[1]], land[[k]], type = "l", col=3, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(2, "-degree landscape"))
-      graphics::abline(h=land[["thresh"]]/2)
-
-    }else{
-
-      graphics::plot(land[[1]], land[[k]], type = "l", col=k, xlab = "(Birth + Death) / 2",ylab = "(Death - Birth) / 2", ylim=c(0, round(max(land[[k]])+1)/2), main =paste0(k-1, "-degree landscape"))
-
-    }
+    attr(land, "maxscale")<-maxscale
+    return(land)
 
   })
 
+  names(lands)<-sapply(1:maxdim, function(k)paste0(k, "-land"))
+
+  return(append(lands, list(thresh=thresh, tseq=tseq)))
+
 }
 
-#'Calculating the mean of persistence
-#'@param diag a persistence diagram
-#'@return the mean of persistence and the double mean of persistence
+#'Calculating the mean of persistence except 0-persistence.
+#'@param diag a persistence diagram.
+#'@importFrom magrittr %>%
+#'@return the mean of persistence.
 #'
-calc_diag_centroid <- function(diag){
-  if(class(diag)=="list") diag <- diag[[1]]
+
+persistence_mean<-function(diag){
+
+  if(class(diag)=="list"){diag<-diag[["diagram"]]}
+
+  maxdim<-max(diag[,1])
   diag <- diag[-which(diag[,1]==0),]
-  centroid1 <- diag[diag[,1]==1,3]-diag[diag[,1]==1,2]
-  centroid2 <- (diag[diag[,1]==2,3]-diag[diag[,1]==2,2])*2
-  cpersistence <- mean(c(centroid1, centroid2))
-  ret <- c(cpersistence,noizes_thresh=cpersistence*2)
-  names(ret) <- c("cpersistence","noizes_thresh")
-  return(ret)
+
+  centroid<-diag[,3]-diag[,2] %>% mean()
+
+  return(centroid)
+
 }
 
+#'Calculate the weighted mean of persistence.
+#'n-dimensional persistence multiplied by (the surface area of n-unit sphere/2*pi).
+#'@param diag persistence diagram.
+#'@importFrom magrittr %>%
+#'@return the weighted mean of persistence.
+#'
+
+persistence_weighted_mean<-function(diag){
+
+  if(class(diag)=="list"){diag<-diag[["diagram"]]}
+
+  maxdim<-max(diag[,1])
+  diag <- diag[-which(diag[,1]==0),]
+
+  centroid<-lapply(1:maxdim, function(k){
+
+    per<-(diag[diag[,1]==k,3]-diag[diag[,1]==k,2])*(surface_nshpere(k)/(2*pi))
+    return(per)
+
+  })
+
+  cpers<-unlist(centroid) %>% mean()
+
+  names(cpers)<-"cpersistence"
+
+  return(cpers)
+
+}
+
+
+#'Calculate surface area of a n-dimensional sphere
+#'@param n dimension of the sphere
+#'@param r radius of the sphere
+#'@return surface area of a n-dimensional sphere
+#'
+
+surface_nshpere<-function(n, r=1){
+
+  s<-(2*pi^((n+1)/2)*(r^n))/gamma((n+1)/2)
+
+  return(s)
+
+}

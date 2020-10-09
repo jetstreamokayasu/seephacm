@@ -4,8 +4,7 @@
 \alias{bootstrap_homology}
 \title{Computing cycles in subsamples}
 \usage{
-bootstrap_homology(X, maxdim, maxscale, const.band = 0,
-  maximum.thresh = F)
+bootstrap_homology(X, maxdim, maxscale, const.band = 0, maximum.thresh = F)
 }
 \arguments{
 \item{X}{subsamples}
