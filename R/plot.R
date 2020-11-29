@@ -19,10 +19,12 @@ plot_diagrams<-function(diags){
 #'
 #'@param lands list of persistence landscape
 #'@param dim dimension to plot
+#'@param xlim the x limits (x1, x2) of the plot of persistence landscape
+#'@param ylim the y limits of the plot of persistence landscape
 #'@importFrom graphics par
 #'@export
 #'
-plot_lands<-function(lands, dim){
+plot_lands<-function(lands, dim, xlim, ylim){
 
 oldpar<-graphics::par(no.readonly=T)
 graphics::par(cex.lab=2, cex.main=2, cex.axis=2, plt = c(0.2, 0.9, 0.2, 0.9))
@@ -30,7 +32,7 @@ graphics::par(cex.lab=2, cex.main=2, cex.axis=2, plt = c(0.2, 0.9, 0.2, 0.9))
 graphics::par(mfrow=c(2, (length(lands)%/%2+length(lands)%%2)))
 
 for (k in 1:length(lands)) {
-  plot_landscape(lands[[k]][dim-4])
+  plot_landscape(land = lands[[k]], dim = dim, xlim = xlim, ylim = ylim)
 }
 
 graphics::par(oldpar)
@@ -50,8 +52,8 @@ graphics::par(oldpar)
 
 plot_landscape<-function(land, dim, xlim, ylim){
 
-  if(missing(xlim)){xlim<-c(0, attr(land[[paste0(dim, "-land")]], "maxscale"))}
-  if(missing(ylim)){ylim<-c(0, round(max(land[[paste0(dim, "-land")]])+0.5))}
+  if(missing(xlim)){xlim<-c(0, max(land[["tseq"]]) )}
+  if(missing(ylim)){ylim<-c(0, round(max(land[[paste0(dim, "-land")]])+0.05, digits = 1))}
 
   graphics::plot(land[["tseq"]], land[[paste0(dim, "-land")]], type = "l", col=dim+1, xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2", xlim=xlim, ylim=ylim, main = paste0(dim, "-degree landscape"))
   graphics::abline(h=land[["thresh"]]*((2*pi)/surface_nshpere(dim)))

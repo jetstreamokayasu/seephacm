@@ -4,12 +4,16 @@
 \alias{plot_lands}
 \title{Plotting persistence landscape in a list}
 \usage{
-plot_lands(lands, dim)
+plot_lands(lands, dim, xlim, ylim)
 }
 \arguments{
 \item{lands}{list of persistence landscape}
 
 \item{dim}{dimension to plot}
+
+\item{xlim}{the x limits (x1, x2) of the plot of persistence landscape}
+
+\item{ylim}{the y limits of the plot of persistence landscape}
 }
 \description{
 Plotting persistence landscape in a list
