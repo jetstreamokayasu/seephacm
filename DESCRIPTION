@@ -1,4 +1,4 @@
-Package: seephacm
+Package: usephacm
 Title: Summarize results of R Package "phacm"
 Version: 0.1.1.0000
 Authors@R: person("Noritaka", "Yamada", email = "okayasu@fz.iit.tsukuba.ac.jp", role = c("aut", "cre"))
