@@ -109,15 +109,18 @@ per_mean<-function(pd){
 #' Calculating persistence of n-dimensional holes
 #' @param pd persisitence diagram by 'phacm'
 #' @param dim dimension
+#' @importFrom assertthat assert_that
 #' @export
-calcper<-function(pd, dim){
+calc_per<-function (pd, dim){
 
-  per.dim<-pd[pd[,1]==dim, 3]-pd[pd[,1]==dim, 2]
-  if(dim==0){per.dim<-per.dim[-1]}
+  assertthat::assert_that((length(dim) == 1) && is.numeric(dim))
 
-  attr(per.dim, "dim")<-dim
+  pers <- pd[pd[, 1] == dim, 3] - pd[pd[, 1] == dim, 2]
 
-  return(per.dim)
+  attr(pers, "pers_dim") <- dim
+
+  return(pers)
+
 }
 
 
@@ -196,7 +199,7 @@ aggr_success_rates<-function(aggrlist, correct){
 
 calc_landscape<-function(diag, maxscale, plot=T, line=T){
 
-  if(class(diag)=="list"){diag<-diag[["diagram"]]}
+  if(is.list(diag)){diag<-diag[["diagram"]]}
 
   thresh<-persistence_weighted_mean(diag)
   tseq <- seq(0, maxscale, length = 1000) #domain

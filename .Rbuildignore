@@ -1,3 +1,4 @@
 ^LICENSE\.md$
 ^seephacm\.Rproj$
 ^\.Rproj\.user$
+^.*\.Rproj$
