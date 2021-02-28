@@ -256,7 +256,7 @@ persistence_mean<-function(diag){
 
 persistence_weighted_mean<-function(diag){
 
-  if(class(diag)=="list"){diag<-diag[["diagram"]]}
+  if(is.list(diag)){diag<-diag[["diagram"]]}
 
   maxdim<-max(diag[,1])
   diag <- diag[-which(diag[,1]==0),]
